@@ -6,49 +6,13 @@ SSH_KEY_NAME="ethz-nfs"
 NUM_INSTANCES=3
 INSTANCE_TYPE="m5.xlarge"
 
-# Directory for logging
-deploy_dir="${SCRIPT_PATH}/experiments/deploy_$(date +%F-%H-%M-%S)"
-mkdir -p "$deploy_dir"
+# Load common functions
+. "$SCRIPT_PATH/../../common/ec2-helpers.sh"
 
-# Start instances
-aws ec2 run-instances \
-    --count $NUM_INSTANCES \
-    --instance-type $INSTANCE_TYPE \
-    --image-id ami-07d9160fa81ccffb5 \
-    --key-name $SSH_KEY_NAME \
-    > "$deploy_dir/run-instances.json"
-
-instanceids=($( cat "$deploy_dir/run-instances.json" |
-    jq -r ".Instances[].InstanceId"))
-echo "Running instances: ${instanceids[*]}."
-
-# Wait until they are running
-while [[ "$(aws ec2 describe-instances --instance-id ${instanceids[*]} | jq -r ".Reservations[].Instances[].State.Name" | sort -u )" != "running" ]]
-do
-    echo "Waiting for them to run..."
-    sleep 1s
-done
-echo "All running."
-
-# Get DNS names
-aws ec2 describe-instances --instance-id ${instanceids[*]} \
-    > "$deploy_dir/describe-instances.json"
-dnsnames=($(cat "$deploy_dir/describe-instances.json" |
-    jq -r ".Reservations[].Instances[].PublicDnsName"))
-privatednsnames=($(cat "$deploy_dir/describe-instances.json" |
-    jq -r ".Reservations[].Instances[].PrivateDnsName"))
-privateips=($(cat "$deploy_dir/describe-instances.json" |
-    jq -r ".Reservations[].Instances[].PrivateIpAddress"))
-
-# Print node information
-echo "Nodes:"
-(
-    echo "  Node ID;Instance ID;Public DNS name;Private DNS name;Private IP"
-    for (( i=0; i<${#instanceids[@]}; i++ ))
-    do
-        echo "  $i;${instanceids[$i]};${dnsnames[$i]};${privatednsnames[$i]};${privateips[$i]}"
-    done
-) | column -t -s";"
+# Deploy cluster
+experiments_dir="$SCRIPT_PATH/../experiments"
+mkdir -p "$experiments_dir"
+deploy_cluster "$experiments_dir" $NUM_INSTANCES $INSTANCE_TYPE
 
 # Deploy software on machines
 echo "Deploying software..."
@@ -89,7 +53,7 @@ wait
 echo "Done deploying machines."
 
 echo "Authorizing pair-wise keys..."
-rm "$deploy_dir/authorized_keys"
+rm -f "$deploy_dir/authorized_keys"
 for dnsname in ${dnsnames[*]}
 do
     ssh -q ec2-user@$dnsname cat "~/.ssh/id_rsa.pub" >> "$deploy_dir/authorized_keys"

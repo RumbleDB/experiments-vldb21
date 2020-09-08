@@ -2,16 +2,13 @@
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-# Find deploy directory
-deploy_dir="$(ls -d experiments/deploy_* | sort | tail -n1)"
+# Load common functions
+. "$SCRIPT_PATH/../../common/ec2-helpers.sh"
 
-# Find instances
-instanceids=($( cat "$deploy_dir/run-instances.json" |
-    jq -r ".Instances[].InstanceId"))
-
-# Get DNS names
-dnsnames=($(cat "$deploy_dir/describe-instances.json" |
-    jq -r ".Reservations[].Instances[].PublicDnsName"))
+# Find cluster metadata
+experiments_dir="$SCRIPT_PATH/../experiments"
+deploy_dir="$(discover_cluster "$experiments_dir")"
+dnsnames=($(discover_dnsnames "$deploy_dir"))
 
 # Upload and run query file
 ssh -q ${dnsnames[0]} 'cat - > /tmp/query.xq'
