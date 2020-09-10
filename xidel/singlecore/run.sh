@@ -19,6 +19,7 @@ ssh -q ${dnsnames[0]} \
         -v /tmp/query.jq:/query.jq:ro \
         -v /data:/data/:ro \
         -e XIDEL_PRINT_TIMING=1 \
+        --ulimit cpu=$((10*60)) \
         $DOCKERIMAGE \
             --printed-json-format=compact \
             --extract-kind=xquery3 \
