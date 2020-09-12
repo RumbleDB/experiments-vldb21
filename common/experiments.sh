@@ -71,7 +71,7 @@ function run_many() {(
 
     for input_size in "${input_size_configs[@]}"
     do
-        for data_set in "weather"
+        for data_set in "weather" "github"
         do
             upload_$platform $data_set $input_size 2>&1 | tee "$result_dir/upload_$(date +%F-%H-%M-%S)"
         done
