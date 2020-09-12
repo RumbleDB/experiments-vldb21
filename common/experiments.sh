@@ -43,7 +43,7 @@ function run_one {(
 		EOF
 
     (
-        cat "$system_dir/$platform/queries/$query."*q | "$system_dir/$platform/run.sh"
+        cat "$system_dir/$platform/queries/$query."*q | "$system_dir/$platform/run.sh" "$query" "$input_size"
         echo "Exit code: $?"
     ) 2>&1 | tee "$run_result_dir"/run.log
 )}
@@ -62,6 +62,15 @@ function upload_singlecore {(
     find . -type f | "$system_dir/singlecore/upload.sh"
 )}
 
+function upload_cluster {(
+    trap 'exit 1' ERR
+
+    data_set=$1
+    input_size=$2
+
+    "$system_dir/cluster/upload.sh" "$data_set" "$input_size"
+)}
+
 function run_many() {(
     trap 'exit 1' ERR
 
@@ -71,7 +80,7 @@ function run_many() {(
 
     for input_size in "${input_size_configs[@]}"
     do
-        for data_set in "weather" "github"
+        for data_set in "sensors" "github"
         do
             upload_$platform $data_set $input_size 2>&1 | tee "$result_dir/upload_$(date +%F-%H-%M-%S)"
         done

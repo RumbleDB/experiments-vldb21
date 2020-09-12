@@ -2,8 +2,19 @@
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
+BUCKETNAME="ingo-json-eu-west-1"
+declare -A PREFIX
+PREFIX["github"]="github/samples"
+PREFIX["sensors"]="sensors/samples"
+
 # Load common functions
 . "$SCRIPT_PATH/../../common/ec2-helpers.sh"
+
+# Compute input path
+dataset="$1"
+input_size="$2"
+
+input_path="${PREFIX[$dataset]}/$input_size"
 
 # Find cluster metadata
 experiments_dir="$SCRIPT_PATH/../experiments"
@@ -12,22 +23,27 @@ dnsnames=($(discover_dnsnames "$deploy_dir"))
 
 # Read list of files and shuffle
 filelist=$(mktemp -t files_XXXXXXXX)
-while read line
-do
-    if [[ -f "$line" ]]
-    then
-        echo "$line"
-    else
-        echo "Skipping non-file '$line'..." >&2
-    fi
-done | sort -R --random-source=<(yes) > $filelist
+aws s3api list-objects \
+        --bucket "$BUCKETNAME" \
+        --prefix "$input_path" \
+    | jq -r .Contents[].Key \
+    | sort -R --random-source=<(yes) \
+    > $filelist
 
 # Upload files
 for (( i=1; i<${#dnsnames[@]}; i++ ))
 do
     (
+        dnsname=${dnsnames[$i]}
+
+        ssh -q $dnsname rm -rf "/data/$dataset"
+        ssh -q $dnsname mkdir -p "/data/$dataset"
+
         files="$(split "$filelist" --number l/$i/$((${#dnsnames[@]}-1)))"
-        tar -cz $(echo $files) | ssh -q ${dnsnames[$i]} "(cd /data && tar -xz)"
+        for file in $files
+        do
+            ssh -q $dnsname aws s3 cp "s3://$BUCKETNAME/$file" "/data/$dataset/"
+        done
         echo "Uploading to node $i done."
     ) &
     sleep 0.1s

@@ -1,4 +1,5 @@
 SSH_KEY_NAME="ethz-nfs"
+INSTANCE_PROFILE="VLDB21-EC2"
 
 function discover_instanceids {
     trap 'echo "Error!"; exit 1' ERR
@@ -46,6 +47,7 @@ function deploy_cluster {
     aws ec2 run-instances \
         --count $num_instances \
         --instance-type $instance_type \
+        --iam-instance-profile Name="$INSTANCE_PROFILE" \
         --image-id ami-07d9160fa81ccffb5 \
         --key-name $SSH_KEY_NAME \
         > "$deploy_dir/run-instances.json"
