@@ -16,6 +16,8 @@ parser.add_argument('-s', '--server',  help='Rumble server to connect to '
                                             '(overwrites $RUMBLE_SERVER).')
 parser.add_argument('-t', '--timing',  help='Display query running time.',
                     action='store_true')
+parser.add_argument('--variables',     help='Global variables (as name:value).',
+                    nargs='*')
 parser.add_argument('-v', '--verbose', help='Be more verbose.',
                     action='store_true')
 args = parser.parse_args()
@@ -39,9 +41,17 @@ server = args.server or \
     os.environ.get('RUMBLE_SERVER', 'http://localhost:8001/jsoniq')
 logging.info('Using server at %s...', server)
 
+# Parse extra variables
+variables = {}
+if args.variables:
+    for var in args.variables:
+        name, value = var.split(':', 1)
+        variables['variable:' + name] = value
+logging.info('Variables:\n%s', variables)
+
 # Run query
 start_timestamp = time.time()
-response = json.loads(requests.post(server, data=query).text)
+response = json.loads(requests.post(server, data=query, params=variables).text)
 end_timestamp = time.time()
 
 logging.info('Response:\n%s', json.dumps(response, sort_keys=True, indent=4))
