@@ -42,8 +42,6 @@ do
 				[[ -f ~/.ssh/id_rsa ]] || ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
 				echo "StrictHostKeyChecking No" > ~/.ssh/config
 				chmod go-rwx ~/.ssh/config
-				sudo mkdir /data
-				sudo chown \$USER:\$USER /data
 				EOF
         ) &> "$deploy_dir/deploy_$dnsname.log"
         echo "Done deploying $dnsname."

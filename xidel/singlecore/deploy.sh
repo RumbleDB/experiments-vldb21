@@ -4,7 +4,7 @@ SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 SSH_KEY_NAME="ethz-nfs"
 NUM_INSTANCES=1
-INSTANCE_TYPE="m5.large"
+INSTANCE_TYPE="m5d.large"
 
 # Load common functions
 . "$SCRIPT_PATH/../../common/ec2-helpers.sh"

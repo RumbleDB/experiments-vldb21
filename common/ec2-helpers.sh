@@ -77,6 +77,34 @@ function deploy_cluster {
             echo "  $i;${instanceids[$i]};${dnsnames[$i]};${privatednsnames[$i]};${privateips[$i]}"
         done
     ) | column -t -s";"
+
+    # Deploy software on machines
+    echo "Deploying common software..."
+    for dnsname in ${dnsnames[*]}
+    do
+        (
+            (
+                # Wait for SSH to come up
+                while [[ "$(ssh -q -o ConnectTimeout=2 -o StrictHostKeyChecking=accept-new ec2-user@$dnsname whoami)" != "ec2-user" ]]
+                do
+                    echo "Waiting for SSH to come up..."
+                    sleep 3s
+                done
+
+                ssh -q ec2-user@$dnsname \
+                    <<-EOF
+				sudo mkfs -t ext4 $(readlink -f /dev/nvme1n1)
+				sudo e2label $(readlink -f /dev/nvme1n1) data
+				sudo mkdir /data
+				sudo mount /dev/nvme1n1 /data
+				sudo chown \$USER:\$USER /data
+				EOF
+            ) &> "$deploy_dir/deploy_$dnsname.log"
+            echo "Done deploying $dnsname."
+        ) &
+    done
+    wait
+    echo "Done deploying common software."
 }
 
 function terminate_cluster {
