@@ -18,6 +18,7 @@ ssh -q ${dnsnames[0]} \
     docker run --rm --cpuset-cpus 0 \
         -v /tmp/query.xq:/query.xq:ro \
         -v /data:/data/:ro \
+        --ulimit cpu=$((10*60)) \
         $DOCKERIMAGE \
             -timing \
             /query.xq

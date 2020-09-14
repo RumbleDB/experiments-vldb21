@@ -18,6 +18,7 @@ ssh -q ${dnsnames[0]} \
     docker run --rm --cpuset-cpus 0 \
         -v /tmp/query.jq:/query.jq:ro \
         -v /data:/data/:ro \
+        --ulimit cpu=$((10*60)) \
         $DOCKERIMAGE \
             --trailing-nl -r --timing -i \
             -q file://query.jq
