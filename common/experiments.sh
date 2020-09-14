@@ -43,7 +43,7 @@ function run_one {
 		EOF
 
     (
-        cat "$system_dir/queries/$query."*q | "$system_dir/$platform/run.sh"
+        cat "$system_dir/$platform/queries/$query."*q | "$system_dir/$platform/run.sh"
         echo "Exit code: $?"
     ) 2>&1 | tee "$run_result_dir"/run.log
 }
