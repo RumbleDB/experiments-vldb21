@@ -6,7 +6,7 @@ SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 SYSTEM="rumble"
 . "$SOURCE_DIR/../common/experiments.sh"
 
-NUM_RECORDS=($((2**0*10000)) $((2**1*10000)) $((2**2*10000)) $((2**3*10000)) $((2**4*10000)) $((2**5*10000)) $((2**6*10000)) $((2**7*10000)) $((2**8*10000)) $((2**9*10000)))
+NUM_RECORDS=($((2**0))mb $((2**1))mb $((2**2))mb $((2**3))mb $((2**4))mb $((2**5))mb $((2**6))mb $((2**7))mb $((2**8))mb $((2**9))mb)
 QUERIES=(weather-count-star weather-q00 weather-q01 weather-q02 weather-filter weather-grouping_large weather-grouping_small weather-sorting)
 
 run_many "singlecore" NUM_RECORDS QUERIES
