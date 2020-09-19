@@ -1,0 +1,5 @@
+SELECT COUNT(*) FROM (
+    SELECT data.`date`
+    FROM sensors
+    WHERE data.dataType = "TMIN"
+    GROUP BY data.`date`) t

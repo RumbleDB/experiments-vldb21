@@ -1,0 +1,4 @@
+SELECT actor.login
+FROM github
+WHERE get_type(actor) = "object"
+ORDER by actor.login

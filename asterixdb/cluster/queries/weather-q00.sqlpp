@@ -1,0 +1,5 @@
+SELECT COUNT(*)
+FROM sensors
+WHERE get_year(datetime(data.`date`)) = 2003
+    AND get_month(datetime(data.`date`)) = 12
+    AND get_day(datetime(data.`date`)) = 25

@@ -1,0 +1,7 @@
+SELECT AVG(val)/10 FROM (
+    SELECT smax.data.`value` - smin.data.`value` AS val
+    FROM sensors smax, sensors smin
+    WHERE smax.data.station = smin.data.station
+        AND smax.data.date = smin.data.date
+        AND smax.data.dataType = "TMAX"
+        AND smin.data.dataType = "TMIN") t
