@@ -4,8 +4,8 @@ SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 BUCKETNAME="ingo-json-eu-west-1"
 declare -A PREFIX
-PREFIX["github"]="github/samples"
-PREFIX["sensors"]="sensors/samples"
+PREFIX["github"]="github"
+PREFIX["sensors"]="sensors"
 
 # Load common functions
 . "$SCRIPT_PATH/../../common/ec2-helpers.sh"

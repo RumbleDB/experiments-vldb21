@@ -8,7 +8,7 @@ then
 fi
 
 NUM_RUNS=5
-NUM_RECORDS=($(for i in {0..9}; do echo --input_size $((2**$i*20))mb; done))
+INPUT_SIZES=($(for i in {0..9}; do echo --input_size samples/$((2**$i*20))mb; done))
 
 # Create result dir
 experiments_dir="$SOURCE_DIR/experiments"
@@ -17,5 +17,5 @@ mkdir -p "$result_dir"
 
 # Run
 (
-    "$SOURCE_DIR/experiments.py" -v ${NUM_RECORDS[*]} --count $NUM_RUNS
+    "$SOURCE_DIR/experiments.py" -v ${INPUT_SIZES[*]} --count $NUM_RUNS
 ) 2>&1 | tee "$result_dir/run.log"

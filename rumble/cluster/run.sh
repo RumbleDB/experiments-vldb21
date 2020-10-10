@@ -4,8 +4,8 @@ SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 BUCKETNAME="s3://ingo-json-eu-west-1"
 declare -A PREFIX
-PREFIX["github"]="github/samples"
-PREFIX["weather"]="sensors/samples"
+PREFIX["github"]="github"
+PREFIX["weather"]="sensors"
 
 # Load common functions
 . "$SCRIPT_PATH/../../common/emr-helpers.sh"

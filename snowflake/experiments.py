@@ -74,13 +74,13 @@ def execute(connection, sql):
 def test_github_count(connection, input_size):
     execute(connection, '''
         SELECT COUNT(*)
-        FROM @s3_json_data/github/samples/{}/ AS github(j)
+        FROM @s3_json_data/github/{}/ AS github(j)
         '''.format(input_size))
 
 def test_github_filter(connection, input_size):
     execute(connection, '''
         SELECT j:"payload":"release":"author":"login"
-        FROM @s3_json_data/github/samples/{}/ AS github(j)
+        FROM @s3_json_data/github/{}/ AS github(j)
         WHERE j:"type" = 'ReleaseEvent' AND
             j:"payload":"release":"prerelease" = TRUE
         '''.format(input_size))
@@ -88,7 +88,7 @@ def test_github_filter(connection, input_size):
 def test_github_grouping(connection, input_size):
     execute(connection, '''
         SELECT j:"type", COUNT(*)
-        FROM @s3_json_data/github/samples/{}/ AS github(j)
+        FROM @s3_json_data/github/{}/ AS github(j)
         GROUP BY j:"type"
         '''.format(input_size))
 
@@ -96,20 +96,20 @@ def test_github_sorting(connection, input_size):
     execute(connection, '''
         CREATE OR REPLACE TEMPORARY TABLE result AS
         SELECT j:"actor":"login" AS login
-        FROM @s3_json_data/github/samples/{}/ AS github(j)
+        FROM @s3_json_data/github/{}/ AS github(j)
         ORDER BY j:"actor":"login"
         '''.format(input_size))
 
 def test_weather_count(connection, input_size):
     execute(connection, '''
         SELECT COUNT(*)
-        FROM @s3_json_data/sensors/samples/{}/ AS sensors(j)
+        FROM @s3_json_data/sensors/{}/ AS sensors(j)
         '''.format(input_size))
 
 def test_weather_q00(connection, input_size):
     execute(connection, '''
         SELECT COUNT(*)
-        FROM @s3_json_data/sensors/samples/{}/ AS sensors(j)
+        FROM @s3_json_data/sensors/{}/ AS sensors(j)
         WHERE YEAR(DATE(j:"data":"date")) = 2003 AND
             MONTH(DATE(j:"data":"date")) = 12 AND
             DAY(DATE(j:"data":"date")) = 25
@@ -119,7 +119,7 @@ def test_weather_q01(connection, input_size):
     execute(connection, '''
         WITH NumberOfMinsPerDay AS (
             SELECT COUNT(*)
-            FROM @s3_json_data/sensors/samples/{}/ AS sensors(j)
+            FROM @s3_json_data/sensors/{}/ AS sensors(j)
             WHERE j:"data":"dataType" = 'TMIN'
             GROUP BY DATE(j:"data":"date")
         )
@@ -130,8 +130,8 @@ def test_weather_q02(connection, input_size):
     execute(connection, '''
         SELECT SUM(sensors_max.j:"data":"value" - sensors_min.j:"data":"value")
         FROM
-            @s3_json_data/sensors/samples/{0}/ AS sensors_min(j),
-            @s3_json_data/sensors/samples/{0}/ AS sensors_max(j)
+            @s3_json_data/sensors/{0}/ AS sensors_min(j),
+            @s3_json_data/sensors/{0}/ AS sensors_max(j)
         WHERE
             sensors_min.j:"data":"dataType" = 'TMIN' AND
             sensors_max.j:"data":"dataType" = 'TMAX' AND
