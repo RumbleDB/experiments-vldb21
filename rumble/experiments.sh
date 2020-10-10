@@ -15,3 +15,8 @@ INPUT_SIZES=($(for i in {0..9}; do echo samples/$((2**$i*20))mb; done))
 QUERIES=(weather-count-star weather-q00 weather-q01 weather-q02 github-count-star github-filter github-grouping github-sorting)
 
 run_many "cluster" INPUT_SIZES QUERIES
+
+INPUT_SIZES=("full")
+QUERIES=(github-count-star github-filter github-grouping github-sorting)
+
+run_many "cluster" INPUT_SIZES QUERIES

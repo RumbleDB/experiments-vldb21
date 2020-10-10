@@ -15,3 +15,8 @@ INPUT_SIZES=($(for i in {0..7}; do echo samples/$((2**$i*20))mb; done))
 QUERIES=(github-sorting)
 
 run_many "cluster" INPUT_SIZES QUERIES
+
+INPUT_SIZES=("full")
+QUERIES=(github-count-star github-filter github-grouping)
+
+run_many "cluster" INPUT_SIZES QUERIES
