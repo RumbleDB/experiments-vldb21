@@ -99,13 +99,17 @@ ssh -q ec2-user@${dnsnames[0]} <<-EOF
 	mkdir -p /tmp/asterixdb/logs/
 	nohup bin/asterixcc -config-file cc.conf &>> /tmp/asterixdb/logs/cc.log &
 	EOF
-sleep 10s
+while [[ "$(echo "42" | "$SCRIPT_PATH/run.sh" | jq -r ".status")" != "success" ]]
+do
+    echo "Waiting for cluster controller to be up..."
+done
 
 # Set up dataverse
-read -r -d '' statement <<-EOF
+echo "Setting up dataverse..."
+! read -r -d '' statement <<-EOF
 	DROP TYPE t1 IF EXISTS;
 	CREATE TYPE t1 AS OPEN {};
 	EOF
-echo "$statement" | "$SCRIPT_PATH/run.sh"
+echo "$statement" | "$SCRIPT_PATH/run.sh" > /dev/null
 
 echo "Master: ${dnsnames[0]}"
