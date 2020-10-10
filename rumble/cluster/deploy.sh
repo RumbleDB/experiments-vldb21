@@ -3,7 +3,7 @@
 SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 SSH_KEY_NAME="ethz-nfs"
-NUM_INSTANCES=9
+NUM_INSTANCES=72
 INSTANCE_TYPE="m5.xlarge"
 EMR_VERSION="emr-6.1.0"
 RUMBLE_VERSION="1.8.1"

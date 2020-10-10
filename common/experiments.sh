@@ -2,7 +2,7 @@
 
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-NUM_RUNS=5
+NUM_RUNS=1
 TMPDIR=/var/muellein/tmp/
 DATADIR=/mnt/scratch/muellein/rumble-experiments-vldb21/
 

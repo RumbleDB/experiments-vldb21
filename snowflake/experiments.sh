@@ -7,10 +7,10 @@ then
     . "$SOURCE_DIR/.credentials.env"
 fi
 
-NUM_RUNS=5
-INPUT_SIZES=($(for i in {0..9}; do echo --input_size samples/$((2**$i*20))mb; done))
+NUM_RUNS=1
+INPUT_SIZES=(--input_size full)
 CLUSTER_SIZE="LARGE"
-QUERY_FILTER="" # leave empty for all queries, use "-k name" to run queries containing "name"
+QUERY_FILTER="-k github" # leave empty for all queries, use "-k name" to run queries containing "name"
 
 # Create result dir
 experiments_dir="$SOURCE_DIR/experiments"

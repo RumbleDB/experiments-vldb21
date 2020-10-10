@@ -3,7 +3,7 @@
 SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 SSH_KEY_NAME="ethz-nfs"
-NUM_INSTANCES=10
+NUM_INSTANCES=80
 INSTANCE_TYPE="m5.xlarge"
 
 # Load common functions
