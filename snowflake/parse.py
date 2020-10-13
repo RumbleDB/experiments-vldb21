@@ -12,7 +12,7 @@ for line in fileinput.input():
         assert current_run is None
         query, cluster_size, input_size, run_num = m.group(1, 2, 3, 5)
 
-        run_num = int(run_num) or 1
+        run_num = int(run_num or 1)
         query = query.replace('_', '-').replace('count', 'count-star')
 
         current_run = {
