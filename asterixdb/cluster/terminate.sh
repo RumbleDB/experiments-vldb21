@@ -17,6 +17,7 @@ do
         echo "Downloading logs from node $i..."
         scp -q -o ConnectTimeout=10 -r ${dnsnames[$i]}:/tmp/asterixdb/logs "$deploy_dir/logs_${dnsnames[$i]}"
     ) &
+    sleep .1
 done
 wait
 echo "Done"

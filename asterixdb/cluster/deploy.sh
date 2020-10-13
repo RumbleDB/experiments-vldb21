@@ -42,6 +42,7 @@ do
         ) &> "$deploy_dir/deploy_$dnsname.log"
         echo "Done deploying $dnsname."
     ) &
+    sleep .1
 done
 wait
 echo "Done deploying machines."
@@ -51,10 +52,12 @@ rm -f "$deploy_dir/authorized_keys"
 for dnsname in ${dnsnames[*]}
 do
     ssh -q ec2-user@$dnsname cat "~/.ssh/id_rsa.pub" >> "$deploy_dir/authorized_keys"
+    sleep .1
 done
 for dnsname in ${dnsnames[*]}
 do
     cat "$deploy_dir/authorized_keys" | ssh -q ec2-user@$dnsname 'cat - >> ~/.ssh/authorized_keys'
+    sleep .1
 done
 echo "Done."
 
@@ -90,6 +93,7 @@ do
 			nohup bin/asterixncservice &>> /tmp/asterixdb/logs/nc.log &
 			EOF
     ) &
+    sleep .1
 done
 wait
 echo "Done starting node controllers."

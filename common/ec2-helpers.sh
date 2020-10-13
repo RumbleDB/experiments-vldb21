@@ -104,6 +104,7 @@ function deploy_cluster {
             ) &> "$deploy_dir/deploy_$dnsname.log"
             echo "Done deploying $dnsname."
         ) &
+        sleep .1
     done
     wait
     echo "Done deploying common software."
@@ -128,6 +129,7 @@ function terminate_cluster {
             echo "Stopping node $i (instance ID: ${instanceids[$i]}, current state: $state)..."
             aws ec2 terminate-instances --instance-id ${instanceids[$i]} > /dev/null
         ) &
+        sleep .1
     done
     wait
     echo "Done"
