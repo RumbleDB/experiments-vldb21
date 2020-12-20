@@ -2,7 +2,7 @@
 
 This repository contains all material used for the experiments of the following paper and is designed to enable anyone to reproduce them:
 
-S. Irimescu, C. Berker Cikis, I. Müller, G. Fourny, G. Alonso. "Rumble: Data Independence for Large Messy Data Sets." In revision for: PVLDB 13 (2020).
+S. Irimescu, C. Berker Cikis, I. Müller, G. Fourny, G. Alonso. "Rumble: Data Independence for Large Messy Data Sets." In: PVLDB 14(4), 2020. DOI: [10.14778/3436905.3436910](https://doi.org/10.14778/3436905.3436910).
 
 ## Structure of the repository
 
